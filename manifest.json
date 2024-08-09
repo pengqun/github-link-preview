@@ -1,0 +1,15 @@
+{
+  "name": "GitHub Link Preview",
+  "version": "0.1",
+  "manifest_version": 3,
+  "description": "Preview GitHub link in a nice popup when you hover over it.",
+  "icons": {
+    "16": "images/icon-16.png",
+    "32": "images/icon-32.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
