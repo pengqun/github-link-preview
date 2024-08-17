@@ -1,49 +1,72 @@
-document.addEventListener("mouseover", async function (event) {
+const POPUP_DIV_ID = "preview-popup";
+const POPUP_CONTENT_CLASS = "popup-content";
+
+// Make sure only one popup is open at a time
+let currentPopup = null;
+
+// Delay popup generation to avoid too many requests
+let popupTimeout = null;
+
+document.addEventListener("mouseover", (event) => {
   const target = event.target;
   if (
     target.tagName.toLowerCase() === "a" &&
     target.href.match(/https:\/\/github\.com\/[^\/]+\/[^\/]+\/?$/)
   ) {
-    console.log("Hovering over GitHub link: ", target.href);
-    await generatePreviewPopup(target);
+    console.debug("Hovering over GitHub link: ", target.href);
+
+    if (popupTimeout) {
+      clearTimeout(popupTimeout);
+    }
+    popupTimeout = setTimeout(async () => {
+      // Clear old popup
+      if (currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
+      }
+      await createNewPopup(target);
+    }, 100);
   }
 });
 
-const POPUP_DIV_ID = "preview-popup";
-
-async function generatePreviewPopup(target) {
-  let existingPopup = document.getElementById(POPUP_DIV_ID);
-  if (existingPopup) {
-    existingPopup.remove();
-  }
-
+async function createNewPopup(target) {
   const repoUrlParts = target.href.split("/");
   const owner = repoUrlParts[3];
   const repo = repoUrlParts[4];
 
   const info = await fetchGitHubRepoInfo(owner, repo);
 
-  const popup = document.createElement("div");
-  popup.id = POPUP_DIV_ID;
-  popup.innerHTML = `
-      <div class="popup-content">
-        <h2>${info.fullName}</h2>
-        <p>${info.description}</p>
-        <p><strong>⭐ Stars:</strong> ${info.stars}</p>
-        <p><strong>👤 Author:</strong> <img src="${info.authorAvatarUrl}" width="20" height="20"> ${info.authorLogin}</p>
-        <p><strong>Last commit:</strong> ${info.lastCommit}</p>
-      </div>
-    `;
+  const popup = generatePopupDOM(info);
+  currentPopup = popup;
+
+  setupPopupPosition(target, popup);
 
   document.body.appendChild(popup);
-
-  const rect = target.getBoundingClientRect();
-  popup.style.top = `${rect.bottom + window.scrollY}px`;
-  popup.style.left = `${rect.left + window.scrollX}px`;
 
   target.addEventListener("mouseout", () => {
     popup.remove();
   });
+}
+
+function setupPopupPosition(target, popup) {
+  const rect = target.getBoundingClientRect();
+  popup.style.top = `${rect.bottom + window.scrollY}px`;
+  popup.style.left = `${rect.left + window.scrollX}px`;
+}
+
+function generatePopupDOM(info) {
+  const popup = document.createElement("div");
+  popup.id = POPUP_DIV_ID;
+  popup.innerHTML = `
+    <div class="${POPUP_CONTENT_CLASS}">
+      <h2>${info.fullName}</h2>
+      <p>${info.description}</p>
+      <p><strong>⭐ Stars:</strong> ${info.stars}</p>
+      <p><strong>👤 Author:</strong> <img src="${info.authorAvatarUrl}" width="20" height="20"> ${info.authorLogin}</p>
+      <p><strong>Last commit:</strong> ${info.lastCommit}</p>
+    </div>
+  `;
+  return popup;
 }
 
 async function fetchGitHubRepoInfo(owner, repo) {
