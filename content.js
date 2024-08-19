@@ -35,7 +35,7 @@ document.addEventListener("mouseover", (event) => {
     }
     popupTimeout = setTimeout(async () => {
       await createNewPopup(target);
-    }, POPUP_DELAY_MILLIS);
+    }, CREATE_DELAY_MILLIS);
   }
 });
 
@@ -118,13 +118,25 @@ function generatePopupDOM(info) {
   popup.innerHTML = `
     <div class="${POPUP_CONTENT_CLASS}">
       <h2>${info.fullName}</h2>
-      <p>${info.description}</p>
-      <p><strong>⭐ Stars:</strong> ${info.stars}</p>
-      <p><strong>👤 Author:</strong> <img src="${info.authorAvatarUrl}" width="20" height="20"> ${info.authorLogin}</p>
-      <p><strong>Last commit:</strong> ${info.lastCommit}</p>
+      <p style="margin-bottom: 10px">${info.description}</p>
+      <p><strong>⭐ Stars: ${formatStars(info.stars)}</strong></p>
+      <p><strong>👤 Author: <img src="${
+        info.authorAvatarUrl
+      }" width="20" height="20"> ${info.authorLogin}</strong></p>
+      <p><strong>📅️️️ Last commit: ${info.lastCommit}</strong></p>
     </div>
   `;
   return popup;
+}
+
+function formatStars(stars) {
+  if (stars >= 10000) {
+    return Math.floor(stars / 1000) + "k";
+  } else if (stars >= 1000) {
+    return (stars / 1000).toFixed(1) + "k";
+  } else {
+    return stars.toString();
+  }
 }
 
 function setupPopupPosition(target, popup) {
