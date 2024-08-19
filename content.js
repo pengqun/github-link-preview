@@ -1,6 +1,9 @@
 const POPUP_DIV_ID = "preview-popup";
 const POPUP_CONTENT_CLASS = "popup-content";
 
+const CREATE_DELAY_MILLIS = 100;
+const REMOVE_DELAY_MILLIS = 100;
+
 // Make sure only one popup is open at a time
 let currentPopup = null;
 let lastTarget = null;
@@ -32,7 +35,7 @@ document.addEventListener("mouseover", (event) => {
     }
     popupTimeout = setTimeout(async () => {
       await createNewPopup(target);
-    }, 100);
+    }, POPUP_DELAY_MILLIS);
   }
 });
 
@@ -45,7 +48,7 @@ document.addEventListener("mouseout", function (event) {
         currentPopup.remove();
         currentPopup = null;
       }
-    }, 100);
+    }, REMOVE_DELAY_MILLIS);
   }
 });
 
@@ -83,7 +86,7 @@ async function createNewPopup(target) {
         popup.remove();
         currentPopup = null;
       }
-    }, 100);
+    }, REMOVE_DELAY_MILLIS);
   });
 }
 
