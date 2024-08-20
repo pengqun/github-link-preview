@@ -28,6 +28,7 @@
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["activeTab", "scripting"],
-  "host_permissions": ["https://api.github.com/"]
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://api.github.com/"],
+  "options_page": "options.html"
 }
