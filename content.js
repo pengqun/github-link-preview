@@ -65,6 +65,9 @@ async function createNewPopup(target) {
   const repo = repoUrlParts[4];
 
   const info = await fetchGitHubRepoInfo(owner, repo);
+  if (info == null) {
+    return;
+  }
 
   if (currentPopup) {
     currentPopup.remove();
