@@ -1,32 +1,25 @@
 // Saves options to chrome.storage
 const saveOptions = () => {
-  const color = document.getElementById("color").value;
-  const likesColor = document.getElementById("like").checked;
+  const githubToken = document.getElementById("github-token").value;
 
-  chrome.storage.sync.set(
-    { favoriteColor: color, likesColor: likesColor },
-    () => {
-      // Update status to let user know options were saved.
-      const status = document.getElementById("status");
-      status.textContent = "Options saved.";
-      setTimeout(() => {
-        status.textContent = "";
-      }, 750);
-    }
-  );
+  chrome.storage.sync.set({ githubToken: githubToken }, () => {
+    // Update status to let user know options were saved.
+    const status = document.createElement("div");
+    status.id = "status";
+    status.textContent = "Options saved.";
+    document.body.appendChild(status);
+    setTimeout(() => {
+      status.textContent = "";
+    }, 750);
+  });
 };
 
-// Restores select box and checkbox state using the preferences
-// stored in chrome.storage.
+// Restores input box state using the preferences stored in chrome.storage.
 const restoreOptions = () => {
-  chrome.storage.sync.get(
-    { favoriteColor: "red", likesColor: true },
-    (items) => {
-      document.getElementById("color").value = items.favoriteColor;
-      document.getElementById("like").checked = items.likesColor;
-    }
-  );
+  chrome.storage.sync.get({ githubToken: "" }, (items) => {
+    document.getElementById("github-token").value = items.githubToken;
+  });
 };
 
 document.addEventListener("DOMContentLoaded", restoreOptions);
-document.getElementById("save").addEventListener("click", saveOptions);
+document.querySelector(".save-button").addEventListener("click", saveOptions);

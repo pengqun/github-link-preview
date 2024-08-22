@@ -1,24 +1,104 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>My Test Extension Options</title>
-  </head>
-  <body>
-    <select id="color">
-      <option value="red">red</option>
-      <option value="green">green</option>
-      <option value="blue">blue</option>
-      <option value="yellow">yellow</option>
-    </select>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extension Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
 
-    <label>
-      <input type="checkbox" id="like" />
-      I like colors.
-    </label>
+        h1 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
-    <div id="status"></div>
-    <button id="save">Save</button>
+        .form-group {
+            margin-bottom: 15px;
+        }
 
+        label {
+            font-size: 14px;
+            color: #555;
+            display: flex;
+            align-items: center;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position the tooltip above the text */
+            left: 50%;
+            margin-left: -110px; /* Center the tooltip */
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .save-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4285f4;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background-color: #357ae8;
+        }
+    </style>
+</head>
+<body>
+    <h1>Extension Options</h1>
+    <form>
+        <div class="form-group">
+            <label for="github-token">
+                GitHub Access Token
+                <div class="tooltip">?
+                    <span class="tooltiptext">
+                        This token is optional. It allows the extension to access your GitHub account for additional features.
+                    </span>
+                </div>
+            </label>
+            <input type="text" id="github-token" placeholder="Enter your GitHub access token">
+        </div>
+        <button type="button" class="save-button">Save</button>
+    </form>
     <script src="options.js"></script>
-  </body>
+</body>
 </html>
