@@ -95,12 +95,28 @@ async function createNewPopup(target) {
 
 async function fetchGitHubRepoInfo(owner, repo) {
   const url = `https://api.github.com/repos/${owner}/${repo}`;
+
+  const token = await new Promise((resolve) => {
+    chrome.storage.sync.get({ githubToken: "" }, (items) => {
+      resolve(items.githubToken);
+    });
+  });
+
   try {
-    const response = await fetch(url);
+    const headers = {
+      "X-GitHub-Api-Version": "2022-11-28",
+    };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(url, { headers });
+
     if (!response.ok) {
       throw new Error(`Error fetching repository data: ${response.statusText}`);
     }
     const data = await response.json();
+
     return {
       fullName: data.full_name,
       description: data.description || "No description available",
@@ -110,7 +126,7 @@ async function fetchGitHubRepoInfo(owner, repo) {
       lastCommit: new Date(data.pushed_at).toLocaleString(),
     };
   } catch (error) {
-    console.error(error);
+    console.error("Failed to fetch repository data", error);
     return null;
   }
 }
