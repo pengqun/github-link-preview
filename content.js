@@ -126,7 +126,7 @@ async function fetchGitHubRepoInfo(owner, repo) {
       lastCommit: new Date(data.pushed_at).toLocaleString(),
     };
   } catch (error) {
-    console.error("Failed to fetch repository data", error);
+    console.warn("Failed to fetch repository data", error);
     return null;
   }
 }
