@@ -96,11 +96,21 @@ async function createNewPopup(target) {
 async function fetchGitHubRepoInfo(owner, repo) {
   const url = `https://api.github.com/repos/${owner}/${repo}`;
 
-  const token = await new Promise((resolve) => {
-    chrome.storage.sync.get({ githubToken: "" }, (items) => {
-      resolve(items.githubToken);
+  let token;
+  try {
+    token = await new Promise((resolve, reject) => {
+      chrome.storage.sync.get({ githubToken: "" }, (items) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error("Unable to retrieve GitHub token"));
+        } else {
+          resolve(items.githubToken);
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error("Error retrieving GitHub token:", error);
+    return null;
+  }
 
   try {
     const headers = {
@@ -113,17 +123,32 @@ async function fetchGitHubRepoInfo(owner, repo) {
     const response = await fetch(url, { headers });
 
     if (!response.ok) {
-      throw new Error(`Error fetching repository data: ${response.statusText}`);
+      if (response.status === 404) {
+        throw new Error("Repository not found");
+      } else if (response.status === 403) {
+        throw new Error("API rate limit reached or authentication failed");
+      } else {
+        throw new Error(
+          `Error fetching repository data: ${response.statusText}`
+        );
+      }
     }
+
     const data = await response.json();
 
+    if (!data || typeof data !== "object") {
+      throw new Error("API returned invalid data");
+    }
+
     return {
-      fullName: data.full_name,
+      fullName: data.full_name || "Unknown",
       description: data.description || "No description available",
-      stars: data.stargazers_count,
-      authorLogin: data.owner.login,
-      authorAvatarUrl: data.owner.avatar_url,
-      lastCommit: new Date(data.pushed_at).toLocaleString(),
+      stars: data.stargazers_count || 0,
+      authorLogin: data.owner?.login || "Unknown",
+      authorAvatarUrl: data.owner?.avatar_url || "",
+      lastCommit: data.pushed_at
+        ? new Date(data.pushed_at).toLocaleString()
+        : "Unknown",
     };
   } catch (error) {
     console.warn("Failed to fetch repository data", error);
