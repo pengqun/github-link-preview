@@ -4,6 +4,18 @@ const POPUP_CONTENT_CLASS = "popup-content";
 const CREATE_DELAY_MILLIS = 100;
 const REMOVE_DELAY_MILLIS = 100;
 
+let isEnabled = true;
+
+chrome.storage.sync.get({ enabled: true }, function (items) {
+  isEnabled = items.enabled;
+});
+
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+  if (namespace === "sync" && "enabled" in changes) {
+    isEnabled = changes.enabled.newValue;
+  }
+});
+
 // Make sure only one popup is open at a time
 let currentPopup = null;
 let lastTarget = null;
@@ -16,6 +28,9 @@ let isMouseOverPopup = false;
 let isMouseOverLink = false;
 
 document.addEventListener("mouseover", (event) => {
+  if (!isEnabled) {
+    return;
+  }
   const target = event.target;
 
   if (isGitHubLink(target)) {
@@ -151,7 +166,7 @@ async function fetchGitHubRepoInfo(owner, repo) {
         : "Unknown",
     };
   } catch (error) {
-    console.warn("Failed to fetch repository data", error);
+    console.debug("Failed to fetch repository data", error);
     return null;
   }
 }
