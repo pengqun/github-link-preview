@@ -2,7 +2,7 @@
 
 GitHub Link Preview is a Chrome extension that enhances your browsing experience by displaying elegant preview popups when you hover over GitHub repository or profile links.
 
-![image](https://github.com/user-attachments/assets/c6855c5e-8a91-4352-9084-e5b745315295)
+![Preview Content](assets/content.jpg)
 
 ## Installation
 
@@ -10,15 +10,15 @@ Install the extension directly from the Chrome Web Store: [GitHub Link Preview o
 
 ## Configuration
 
-1. Click the extension icon in your browser toolbar, then select 'Go to Options':
+- **Switch**: Click the extension icon in your browser toolbar, then toggle the 'Enable Preview Popup Globally' switch.
 
-    ![image](https://github.com/user-attachments/assets/dc27184d-b29a-4435-a956-76c2c789dd50)
+    ![Popup](assets/popup.jpg)
 
-2. Configure the settings according to your preferences:
+- **Options**: Click the extension icon in your browser toolbar, then select 'Go to Options'.
 
-    ![image](https://github.com/user-attachments/assets/dbab43bd-1766-4d9d-ac4d-a09d45c75e08)
+    ![Options](assets/options.jpg)
 
-    - **GitHub Access Token**_(Optional)_: Use your personal GitHub access token to invoke GitHub APIs with higher rate limits, allowing for a more robust experience.
+  - **GitHub Access Token** _(Optional)_: Use your personal GitHub access token to invoke GitHub APIs with higher rate limits, allowing for a more robust experience.
 
 ## References
 
