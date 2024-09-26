@@ -33,7 +33,7 @@ document.addEventListener("mouseover", (event) => {
   }
   const target = event.target;
 
-  if (isGitHubLink(target)) {
+  if (shouldShowPopup(target)) {
     console.debug("Hovering over GitHub link: ", target.href);
     isMouseOverLink = true;
 
@@ -56,7 +56,7 @@ document.addEventListener("mouseover", (event) => {
 
 document.addEventListener("mouseout", function (event) {
   const target = event.target;
-  if (isGitHubLink(target)) {
+  if (shouldShowPopup(target)) {
     isMouseOverLink = false;
     setTimeout(() => {
       if (!isMouseOverPopup && currentPopup) {
@@ -67,11 +67,20 @@ document.addEventListener("mouseout", function (event) {
   }
 });
 
+function shouldShowPopup(target) {
+  return isGitHubLink(target) && !isGitHubHovercard(target);
+}
+
 function isGitHubLink(target) {
   return (
     target.tagName.toLowerCase() === "a" &&
     target.href.match(/https:\/\/github\.com\/[^\/]+\/[^\/]+\/?$/)
   );
+}
+
+// Avoid repeative popups on GitHub official hovercards
+function isGitHubHovercard(target) {
+  return target.hasAttribute("data-hovercard-type");
 }
 
 async function createNewPopup(target) {
@@ -172,7 +181,7 @@ async function fetchGitHubRepoInfo(owner, repo) {
       visibility: data.visibility || "Unknown",
     };
   } catch (error) {
-    console.error("Failed to fetch repository data", error);
+    console.error(`Failed to fetch repository data for url ${url}: ${error}`);
     return null;
   }
 }
