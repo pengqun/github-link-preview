@@ -1,24 +1,30 @@
+const DEFAULT_POPUP_DELAY = 500;
+
 // Saves options to chrome.storage
 const saveOptions = () => {
   const githubToken = document.getElementById("github-token").value;
+  const popupDelay =
+    parseInt(document.getElementById("popup-delay").value) ||
+    DEFAULT_POPUP_DELAY;
 
-  chrome.storage.sync.set({ githubToken: githubToken }, () => {
-    // Update status to let user know options were saved.
-    const status = document.createElement("div");
-    status.id = "status";
+  chrome.storage.sync.set({ githubToken, popupDelay }, () => {
+    const status = document.getElementById("status");
     status.textContent = "Options saved.";
-    document.body.appendChild(status);
     setTimeout(() => {
       status.textContent = "";
-    }, 750);
+    }, 1500);
   });
 };
 
 // Restores input box state using the preferences stored in chrome.storage.
 const restoreOptions = () => {
-  chrome.storage.sync.get({ githubToken: "" }, (items) => {
-    document.getElementById("github-token").value = items.githubToken;
-  });
+  chrome.storage.sync.get(
+    { githubToken: "", popupDelay: DEFAULT_POPUP_DELAY },
+    (items) => {
+      document.getElementById("github-token").value = items.githubToken;
+      document.getElementById("popup-delay").value = items.popupDelay;
+    }
+  );
 };
 
 document.addEventListener("DOMContentLoaded", restoreOptions);

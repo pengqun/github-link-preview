@@ -4,117 +4,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Link Preivew Extension Options</title>
+    <title>GitHub Link Preview Extension Options</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
+            padding: 60px;
+            background-color: #f6f8fa;
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .options-container {
             background-color: white;
-            margin-top: 5%;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 600px;
+            padding: 32px;
+            border-radius: 6px;
+            box-shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
+            width: 480px;
+            max-width: 100%;
+            box-sizing: border-box;
         }
 
         .header {
             display: flex;
-            flex-direction: row;
-            justify-content: center;
             align-items: center;
-            text-align: end;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .logo {
-            width: 32px;
-            height: 32px;
-            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            margin-right: 16px;
         }
 
-        .logo-text {
-            font-size: 20px;
-            color: #dc5a26;
-            margin-right: 10px;
+        .title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #24292f;
         }
 
-        h1 {
-            font-size: 18px;
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
+        .option {
+            margin-bottom: 24px;
         }
 
         label {
+            display: block;
             font-size: 14px;
-            color: #555;
-            display: flex;
-            align-items: center;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
         }
 
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            margin-left: 5px;
-            cursor: pointer;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 220px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -110px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        input[type="text"] {
+        input[type="text"],
+        input[type="number"] {
             width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
+            padding: 8px 12px;
             font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #0969da;
+            box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.3);
         }
 
         .save-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
             color: white;
-            background-color: #4285f4;
-            border: none;
-            border-radius: 4px;
+            background-color: #2da44e;
+            border: 1px solid rgba(27, 31, 36, 0.15);
+            border-radius: 6px;
             cursor: pointer;
+            transition: background-color 0.2s;
         }
 
         .save-button:hover {
-            background-color: #357ae8;
+            background-color: #2c974b;
+        }
+
+        .status {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+            color: #2da44e;
         }
     </style>
 </head>
@@ -123,24 +104,18 @@
     <div class="options-container">
         <div class="header">
             <img src="images/icon-32.png" alt="Logo" class="logo">
-            <h1 class="logo-text">GitHub Link Preview</h1>
-            <h1>Extension Options</h1>
+            <h1 class="title">GitHub Link Preview Options</h1>
         </div>
-        <form>
-            <div class="form-group">
-                <label for="github-token">
-                    GitHub Access Token
-                    <div class="tooltip">
-                        <span class="tooltiptext">
-                            This token is optional. It allows the extension to access your GitHub account for additional
-                            features.
-                        </span>
-                    </div>
-                </label>
-                <input type="text" id="github-token" placeholder="Enter your GitHub access token">
-            </div>
-            <button type="button" class="save-button">Save</button>
-        </form>
+        <div class="option">
+            <label for="github-token">GitHub Access Token</label>
+            <input type="text" id="github-token" placeholder="Enter your GitHub token">
+        </div>
+        <div class="option">
+            <label for="popup-delay">Popup Delay (ms)</label>
+            <input type="number" id="popup-delay" min="0" step="100" placeholder="Enter delay in milliseconds">
+        </div>
+        <button class="save-button">Save Changes</button>
+        <div id="status" class="status"></div>
     </div>
     <script src="options.js"></script>
 </body>

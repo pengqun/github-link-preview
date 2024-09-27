@@ -1,21 +1,33 @@
 const POPUP_DIV_ID = "preview-popup";
 const POPUP_CONTENT_CLASS = "popup-content";
 
-const CREATE_DELAY_MILLIS = 100;
-const REMOVE_DELAY_MILLIS = 100;
+const DEFAULT_POPUP_DELAY = 500;
+const DEFAULT_REMOVE_DELAY = 300;
 
 let isEnabled = true;
+let popupDelay = DEFAULT_POPUP_DELAY;
 
-chrome.storage.sync.get({ enabled: true }, function (items) {
-  isEnabled = items.enabled;
-});
+chrome.storage.sync.get(
+  { enabled: true, popupDelay: DEFAULT_POPUP_DELAY },
+  function (items) {
+    isEnabled = items.enabled;
+    popupDelay = items.popupDelay;
+    console.debug("Loaded options:", { isEnabled, popupDelay });
+  }
+);
 
 chrome.storage.onChanged.addListener(function (changes, namespace) {
-  if (namespace === "sync" && "enabled" in changes) {
-    isEnabled = changes.enabled.newValue;
+  if (namespace === "sync") {
+    if ("enabled" in changes) {
+      isEnabled = changes.enabled.newValue;
+      console.debug('Options updated for "enabled":', isEnabled);
+    }
+    if ("popupDelay" in changes) {
+      popupDelay = changes.popupDelay.newValue;
+      console.debug('Options updated for "popupDelay":', popupDelay);
+    }
   }
 });
-
 // Make sure only one popup is open at a time
 let currentPopup = null;
 let lastTarget = null;
@@ -27,6 +39,8 @@ let popupTimeout = null;
 let isMouseOverPopup = false;
 let isMouseOverLink = false;
 
+let currentHoverTarget = null;
+
 document.addEventListener("mouseover", (event) => {
   if (!isEnabled) {
     return;
@@ -36,6 +50,7 @@ document.addEventListener("mouseover", (event) => {
   if (shouldShowPopup(target)) {
     console.debug("Hovering over GitHub link: ", target.href);
     isMouseOverLink = true;
+    currentHoverTarget = target;
 
     if (lastTarget !== target) {
       lastTarget = target;
@@ -49,21 +64,30 @@ document.addEventListener("mouseover", (event) => {
       clearTimeout(popupTimeout);
     }
     popupTimeout = setTimeout(async () => {
-      await createNewPopup(target);
-    }, CREATE_DELAY_MILLIS);
+      if (isMouseOverLink && target === currentHoverTarget) {
+        await createNewPopup(target);
+      }
+    }, popupDelay);
   }
 });
 
-document.addEventListener("mouseout", function (event) {
+document.addEventListener("mouseout", (event) => {
   const target = event.target;
   if (shouldShowPopup(target)) {
     isMouseOverLink = false;
+    if (target === currentHoverTarget) {
+      currentHoverTarget = null;
+    }
+    if (popupTimeout) {
+      clearTimeout(popupTimeout);
+      popupTimeout = null;
+    }
     setTimeout(() => {
-      if (!isMouseOverPopup && currentPopup) {
+      if (!isMouseOverPopup && !isMouseOverLink && currentPopup) {
         currentPopup.remove();
         currentPopup = null;
       }
-    }, REMOVE_DELAY_MILLIS);
+    }, DEFAULT_REMOVE_DELAY);
   }
 });
 
@@ -109,11 +133,11 @@ async function createNewPopup(target) {
   popup.addEventListener("mouseout", () => {
     isMouseOverPopup = false;
     setTimeout(() => {
-      if (!isMouseOverPopup && !isMouseOverLink) {
-        popup.remove();
+      if (!isMouseOverPopup && !isMouseOverLink && currentPopup) {
+        currentPopup.remove();
         currentPopup = null;
       }
-    }, REMOVE_DELAY_MILLIS);
+    }, DEFAULT_REMOVE_DELAY);
   });
 }
 
