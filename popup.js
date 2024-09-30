@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // 当开关状态改变时保存设置
   enableToggle.addEventListener("change", function () {
     chrome.storage.sync.set({ enabled: this.checked }, function () {
-      console.log("Extension " + (this.checked ? "enabled" : "disabled"));
+      // console.debug("Extension " + (this.checked ? "enabled" : "disabled"));
     });
   });
 });

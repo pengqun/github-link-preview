@@ -12,7 +12,7 @@ chrome.storage.sync.get(
   function (items) {
     isEnabled = items.enabled;
     popupDelay = items.popupDelay;
-    console.debug("Loaded options:", { isEnabled, popupDelay });
+    // console.debug("Loaded options:", { isEnabled, popupDelay });
   }
 );
 
@@ -20,11 +20,11 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
   if (namespace === "sync") {
     if ("enabled" in changes) {
       isEnabled = changes.enabled.newValue;
-      console.debug('Options updated for "enabled":', isEnabled);
+      // console.debug('Options updated for "enabled":', isEnabled);
     }
     if ("popupDelay" in changes) {
       popupDelay = changes.popupDelay.newValue;
-      console.debug('Options updated for "popupDelay":', popupDelay);
+      // console.debug('Options updated for "popupDelay":', popupDelay);
     }
   }
 });
@@ -48,7 +48,7 @@ document.addEventListener("mouseover", (event) => {
   const target = event.target;
 
   if (shouldShowPopup(target)) {
-    console.debug("Hovering over GitHub link: ", target.href);
+    // console.debug("Hovering over GitHub link: ", target.href);
     isMouseOverLink = true;
     currentHoverTarget = target;
 
