@@ -17,8 +17,9 @@ def batch_resize():
 
         try:
             resize_image(input_path, output_size, crop_mode)
-            print(f"Successfully resized {input_path} to {
-                  output_size[0]}x{output_size[1]}")
+            print(
+                f"Successfully resized {input_path} to {output_size[0]}x{output_size[1]}"
+            )
         except Exception as e:
             print(f"Error resizing {input_path}: {str(e)}")
 
