@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Link Preview Extension Options</title>
+    <link rel="stylesheet" href="./options.css" />
+  </head>
+  <body>
+    <div class="options-container">
+      <div class="header">
+        <img src="/images/icon-32.png" alt="Logo" class="logo" />
+        <h1 class="title">GitHub Link Preview Options</h1>
+      </div>
+      <div class="option">
+        <label for="github-token">GitHub Access Token</label>
+        <input
+          type="text"
+          id="github-token"
+          placeholder="Enter your GitHub token"
+        />
+      </div>
+      <div class="option">
+        <label for="popup-delay">Popup Delay (ms)</label>
+        <input
+          type="number"
+          id="popup-delay"
+          min="0"
+          step="100"
+          placeholder="Enter delay in milliseconds"
+        />
+      </div>
+      <button class="save-button">Save Changes</button>
+      <div id="status" class="status"></div>
+    </div>
+    <script type="module" src="./index.ts"></script>
+  </body>
+</html>

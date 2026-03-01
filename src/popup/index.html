@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitHub Link Preview</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <div class="popup-container">
+      <div class="header-left">
+        <img src="/images/icon-32.png" alt="Logo" class="logo" />
+        <h1>GitHub Link Preview</h1>
+      </div>
+      <div class="header-right">
+        <div class="tooltip-container">
+          <button id="go-to-options" class="image-button">
+            <img src="/images/options.png" alt="Options" class="button-image" />
+          </button>
+          <span class="tooltip-text">Go to options</span>
+        </div>
+        <div class="tooltip-container">
+          <a
+            href="https://github.com/pengqun/github-link-preview"
+            target="_blank"
+          >
+            <img src="/images/help.png" alt="Help" class="button-image" />
+          </a>
+          <span class="tooltip-text">Get some help</span>
+        </div>
+      </div>
+    </div>
+    <div class="switch-container">
+      <label class="switch">
+        <input type="checkbox" id="enableToggle" />
+        <span class="slider"></span>
+      </label>
+      <span class="switch-label">Enable Preview Popup Globally</span>
+    </div>
+    <script type="module" src="./index.ts"></script>
+  </body>
+</html>

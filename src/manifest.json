@@ -1,6 +1,6 @@
 {
   "name": "GitHub Link Preview",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "manifest_version": 3,
   "description": "Preview GitHub link in a nice popup when you hover over it.",
   "icons": {
@@ -10,7 +10,7 @@
     "128": "images/icon-128.png"
   },
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup/index.html",
     "default_icon": {
       "16": "images/icon-16.png",
       "32": "images/icon-32.png",
@@ -21,15 +21,14 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["content.css"],
+      "js": ["src/content/index.ts"],
       "run_at": "document_end"
     }
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background/index.ts"
   },
   "permissions": ["storage"],
   "host_permissions": ["https://api.github.com/"],
-  "options_page": "options.html"
+  "options_page": "src/options/index.html"
 }
